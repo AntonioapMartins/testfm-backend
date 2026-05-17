@@ -26,21 +26,19 @@ router.get("/", async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    const baseUrl = process.env.BASE_URL || "http://localhost:3001";
+    const baseUrl = process.env.BASE_URL || "https://api.testfm.pt";
 
-    const formatted = galleries.map((gallery) => {
-      const g = gallery.toJSON();
+const formatted = galleries.map((gallery) => {
+  const g = gallery.toJSON();
 
-      return {
-        ...g,
-        images: (g.images || []).map((img) => ({
-          ...img,
-          image_url: img.image_url.startsWith("http")
-            ? img.image_url
-            : `${baseUrl}/uploads/${img.image_url}`,
-        })),
-      };
-    });
+  return {
+    ...g,
+    images: (g.images || []).map((img) => ({
+      ...img,
+      image_url: `${baseUrl}/uploads/${img.image_url}`,
+    })),
+  };
+});
 
     return res.json(formatted);
   } catch (err) {
@@ -116,9 +114,9 @@ router.post(
       if (!gallery) return res.status(404).json({ error: "Galeria não encontrada" });
 
       const images = req.files.map((file) => ({
-        image_url: `${process.env.BASE_URL}/uploads/${file.filename}`,
-        galleryId: gallery.id,
-      }));
+  image_url: file.filename,
+  galleryId: gallery.id,
+}));
 
       await GalleryImage.bulkCreate(images);
 

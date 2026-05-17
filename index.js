@@ -24,7 +24,7 @@ const galleryRouter = require('./routes/Galleries');
 app.use("/galleries", galleryRouter);
 
 db.sequelize.sync({ alter: true }).then(() => {
-    app.listen(3001, () => {
+    app.listen(3000, () => {
         console.log('Server is running on port 3001');
       });
 });
